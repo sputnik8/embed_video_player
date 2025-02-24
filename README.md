@@ -13,55 +13,44 @@ and the Flutter guide for
 
 # Embed Video Player
 
-Пакет Flutter для встраивания видеоплееров из различных источников (ВКонтакте, YouTube и произвольные iframe) с использованием WebView. Пакет обеспечивает чёткое разделение между получением данных о видео и его отображением, что делает его гибким и простым в использовании.
+Внутренняя документация по пакету для встраивания видеоплееров.
 
-## Возможности
+## Описание
 
-- 🎥 Поддержка различных источников видео:
-  - Видео из ВКонтакте
-  - Видео из YouTube
-  - Произвольные iframe-встройки
-- 🔄 Автоматическая обработка соотношения сторон
-- 📱 Адаптивный дизайн
-- ⚡ Эффективное получение и кэширование данных видео
-- 🎨 Современный пользовательский интерфейс
-- 🔒 Обработка ошибок и состояний загрузки
+Пакет Flutter для встраивания видеоплееров из различных источников (ВКонтакте, YouTube и произвольные iframe) с использованием WebView. Пакет обеспечивает чёткое разделение между получением данных о видео и его отображением.
 
-## Установка
+## Подключение пакета
 
-Добавьте в файл `pubspec.yaml` вашего проекта:
+Добавьте зависимость в `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  embed_video_player: ^1.0.0
+  embed_video_player:
+    path: packages/embed_video_player  # Путь к локальному пакету
 ```
 
 ## Использование
 
-Пакет состоит из двух основных частей:
-1. `EmbedUrlProviderService` - для получения данных о видео
-2. `EmbedVideoPlayer` - для отображения видео
-
-### Базовое использование
+### Базовый пример
 
 ```dart
 import 'package:embed_video_player/embed_video_player.dart';
 
-// 1. Создаем конфигурацию видео
+// 1. Создание конфигурации видео
 final videoConfig = VideoConfig(
   source: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
   type: VideoSource.youtube,
 );
 
-// 2. Инициализируем сервис
+// 2. Инициализация сервиса
 final videoService = EmbedUrlProviderService(
-  vkAccessToken: 'ваш_токен_вк', // Необязательно, требуется только для видео ВК
+  vkAccessToken: 'ваш_токен_вк', // Опционально, только для ВК
 );
 
-// 3. Получаем данные о видео
+// 3. Получение данных видео
 final videoResponse = await videoService.getVideoData(videoConfig);
 
-// 4. Отображаем видео
+// 4. Отображение видео
 EmbedVideoPlayer(
   videoResponse: videoResponse,
   onError: (error) => print('Ошибка: $error'),
@@ -69,10 +58,9 @@ EmbedVideoPlayer(
 )
 ```
 
-### Использование с разными источниками видео
+### Примеры конфигурации для разных источников
 
 #### YouTube
-
 ```dart
 final youtubeConfig = VideoConfig(
   source: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
@@ -81,20 +69,17 @@ final youtubeConfig = VideoConfig(
 ```
 
 #### ВКонтакте
-
 ```dart
 final vkConfig = VideoConfig(
   source: 'https://vk.com/video-12345_67890',
   type: VideoSource.vk,
   parameters: {
-    // Дополнительные параметры для ВК
     'hd': '1',
   },
 );
 ```
 
 #### Произвольный Iframe
-
 ```dart
 final iframeConfig = VideoConfig(
   source: 'https://example.com/embed/video',
@@ -102,25 +87,9 @@ final iframeConfig = VideoConfig(
 );
 ```
 
-### Обработка ошибок
+## Интеграция с Cubit
 
-Пакет предоставляет встроенную обработку ошибок с понятным пользовательским интерфейсом:
-
-```dart
-EmbedVideoPlayer(
-  videoResponse: videoResponse,
-  onError: (error) {
-    // Обработка ошибки
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(error)),
-    );
-  },
-)
-```
-
-### Продвинутое использование с управлением состоянием
-
-Пример использования с Cubit:
+Рекомендуемый способ использования с управлением состоянием:
 
 ```dart
 class VideoPlayerCubit extends Cubit<VideoState> {
@@ -146,7 +115,7 @@ class VideoPlayerCubit extends Cubit<VideoState> {
   }
 }
 
-// В вашем виджете
+// Использование в виджете
 BlocBuilder<VideoPlayerCubit, VideoState>(
   builder: (context, state) {
     if (state.isLoading) {
@@ -165,56 +134,43 @@ BlocBuilder<VideoPlayerCubit, VideoState>(
 )
 ```
 
-## Дополнительная информация
+## Структура данных
 
-### Структура VideoResponse
+### VideoResponse
+```dart
+class VideoResponse {
+  final String html;          // HTML-содержимое iframe
+  final Size size;           // Размеры видео
+  final bool isVertical;     // Вертикальное ли видео
+  final String? error;       // Сообщение об ошибке
+  final double aspectRatio;  // Соотношение сторон
+}
+```
 
-Класс `VideoResponse` содержит:
-- `html`: HTML-содержимое iframe
-- `size`: Размеры видео (ширина и высота)
-- `isVertical`: Является ли видео вертикальным
-- `error`: Опциональное сообщение об ошибке
-- `aspectRatio`: Рассчитанное соотношение сторон видео
+## Кастомизация размеров
 
-### Настройка
-
-Пакет автоматически обрабатывает соотношение сторон и адаптивный дизайн, но вы можете обернуть `EmbedVideoPlayer` в свой контейнер для управления его размером:
+Для управления размером плеера используйте стандартные виджеты Flutter:
 
 ```dart
 SizedBox(
-  height: 400, // Пользовательская высота
+  height: 400,
   child: EmbedVideoPlayer(
     videoResponse: videoResponse,
   ),
 )
 ```
 
-## Участие в разработке
+## Обработка ошибок
 
-Мы приветствуем ваше участие в развитии пакета! Не стесняйтесь создавать Pull Request.
+Плеер автоматически отображает ошибки, но вы можете добавить свою обработку:
 
-## Лицензия
-
-```
-MIT License
-
-Copyright (c) 2024 Your Name
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+```dart
+EmbedVideoPlayer(
+  videoResponse: videoResponse,
+  onError: (error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(error)),
+    );
+  },
+)
 ```
