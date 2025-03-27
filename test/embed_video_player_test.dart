@@ -46,10 +46,10 @@ class MockPlatformInAppWebViewController extends Fake
   }) async {}
 
   @override
-  Future<void> addJavaScriptHandler({
+  void addJavaScriptHandler({
     required String handlerName,
-    required dynamic Function(List<dynamic> arguments) callback,
-  }) async {}
+    required Function callback,
+  }) {}
 
   @override
   Future<void> setWebContentsDebuggingEnabled(bool enabled) async {}
