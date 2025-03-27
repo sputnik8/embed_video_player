@@ -69,7 +69,7 @@ class _EmbedVideoPlayerState extends State<EmbedVideoPlayer> {
   void _handleError(String error) {
     if (!mounted) return;
 
-    log('Video player error: $error');
+    log('Video player error: $error', name: 'EmbedVideoPlayer');
     setState(() {
       _isLoading = false;
     });
@@ -133,7 +133,7 @@ class _EmbedVideoPlayerState extends State<EmbedVideoPlayer> {
                   handlerName: 'onVideoEvent',
                   callback: (args) {
                     final event = args[0] as String;
-                    log('Video event: $event');
+
                     if (event == 'ended') {
                       widget.onVideoComplete?.call();
                     }
