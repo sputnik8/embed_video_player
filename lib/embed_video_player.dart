@@ -148,6 +148,24 @@ class _EmbedVideoPlayerState extends State<EmbedVideoPlayer> {
                   },
                 );
 
+                controller.addJavaScriptHandler(
+                  handlerName: 'onSeeking',
+                  callback: (args) {
+                    controller.evaluateJavascript(
+                      source: 'document.querySelector("video")?.pause();',
+                    );
+                  },
+                );
+
+                controller.addJavaScriptHandler(
+                  handlerName: 'onSeeked',
+                  callback: (args) {
+                    controller.evaluateJavascript(
+                      source: 'document.querySelector("video")?.play();',
+                    );
+                  },
+                );
+
                 _loadContent();
               },
               initialSettings: InAppWebViewSettings(

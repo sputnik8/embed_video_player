@@ -82,6 +82,12 @@ class VideoPlayerTemplate {
                 videos[i].addEventListener('ended', function() {
                   window.flutter_inappwebview.callHandler('onVideoEvent', 'ended');
                 });
+                videos[i].addEventListener('seeking', function() {
+                  window.flutter_inappwebview.callHandler('onSeeking');
+                });
+                videos[i].addEventListener('seeked', function() {
+                  window.flutter_inappwebview.callHandler('onSeeked');
+                });
                 videos[i].addEventListener('error', function(e) {
                   window.flutter_inappwebview.callHandler('onVideoError', e.message);
                 });
