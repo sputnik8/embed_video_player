@@ -160,6 +160,9 @@ class _EmbedVideoPlayerState extends State<EmbedVideoPlayer> {
                 useOnLoadResource: true,
                 javaScriptEnabled: true,
                 useHybridComposition: true,
+                allowsInlineMediaPlayback: true,
+                allowsPictureInPictureMediaPlayback: false,
+                allowsAirPlayForMediaPlayback: false,
               ),
               onProgressChanged: (controller, progress) {
                 if (progress == 100) {
