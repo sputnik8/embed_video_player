@@ -1,33 +1,83 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class VideoSize {
+  const VideoSize({required this.width, required this.height});
 
-part 'video_response.freezed.dart';
-part 'video_response.g.dart';
+  final int width;
+  final int height;
 
-@freezed
-class VideoSize with _$VideoSize {
-  const factory VideoSize({
-    required int width,
-    required int height,
-  }) = _VideoSize;
+  factory VideoSize.fromJson(Map<String, dynamic> json) {
+    return VideoSize(
+      width: json['width'] as int,
+      height: json['height'] as int,
+    );
+  }
 
-  factory VideoSize.fromJson(Map<String, dynamic> json) =>
-      _$VideoSizeFromJson(json);
+  Map<String, dynamic> toJson() => {'width': width, 'height': height};
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is VideoSize &&
+          runtimeType == other.runtimeType &&
+          width == other.width &&
+          height == other.height;
+
+  @override
+  int get hashCode => Object.hash(width, height);
+
+  @override
+  String toString() => 'VideoSize(width: $width, height: $height)';
 }
 
-@freezed
-class VideoResponse with _$VideoResponse {
-  const factory VideoResponse({
-    required String html,
-    required VideoSize size,
-    String? thumbnailUrl,
-    @Default(false) bool isVertical,
-    String? error,
-  }) = _VideoResponse;
+class VideoResponse {
+  const VideoResponse({
+    required this.html,
+    required this.size,
+    this.thumbnailUrl,
+    this.isVertical = false,
+    this.error,
+  });
 
-  factory VideoResponse.fromJson(Map<String, dynamic> json) =>
-      _$VideoResponseFromJson(json);
+  final String html;
+  final VideoSize size;
+  final String? thumbnailUrl;
+  final bool isVertical;
+  final String? error;
 
-  const VideoResponse._();
+  factory VideoResponse.fromJson(Map<String, dynamic> json) {
+    return VideoResponse(
+      html: json['html'] as String,
+      size: VideoSize.fromJson(json['size'] as Map<String, dynamic>),
+      thumbnailUrl: json['thumbnailUrl'] as String?,
+      isVertical: json['isVertical'] as bool? ?? false,
+      error: json['error'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'html': html,
+    'size': size.toJson(),
+    if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
+    'isVertical': isVertical,
+    if (error != null) 'error': error,
+  };
 
   double get aspectRatio => size.width / size.height;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is VideoResponse &&
+          runtimeType == other.runtimeType &&
+          html == other.html &&
+          size == other.size &&
+          thumbnailUrl == other.thumbnailUrl &&
+          isVertical == other.isVertical &&
+          error == other.error;
+
+  @override
+  int get hashCode => Object.hash(html, size, thumbnailUrl, isVertical, error);
+
+  @override
+  String toString() =>
+      'VideoResponse(html: $html, size: $size, thumbnailUrl: $thumbnailUrl, isVertical: $isVertical, error: $error)';
 }
