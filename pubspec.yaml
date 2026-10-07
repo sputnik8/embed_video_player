@@ -1,18 +1,16 @@
 name: embed_video_player
 description: A Flutter package for embedding video players from various sources (VK, YouTube, and generic iframes) using WebView.
-version: 1.0.5
+version: 1.1.0
 
 environment:
-  sdk: ">=3.6.0 <4.0.0"
-  flutter: ">=3.47.0"
+  sdk: '>=3.10.0 <4.0.0'
+  flutter: ">=3.38.0 < 4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   material_ui: ^1.6.0
   dio: ^5.4.1
-  freezed_annotation: ^3.1.0
-  json_annotation: ^4.12.0
   flutter_inappwebview: ^6.2.0-beta.2
   flutter_inappwebview_platform_interface: ^1.4.0-beta.2
   plugin_platform_interface: ^2.1.8
@@ -21,13 +19,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^5.4.4
-  build_runner: ^2.4.8
-  flutter_lints: ^5.0.0
-  freezed: ^2.5.8
-  json_serializable: ^6.7.1
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true
-  # This section identifies this Flutter project as a plugin project.
-  # The 'pluginClass' specifies the class (in Java, Kotlin, Swift, Objective-C, etc.)
-  # which should be registered in the plugin registry.
